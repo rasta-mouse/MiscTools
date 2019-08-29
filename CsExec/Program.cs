@@ -76,7 +76,7 @@ namespace CsExec
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine(" [x] {0}", e.Message);
             }
             
         }
