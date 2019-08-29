@@ -1,7 +1,7 @@
 # MiscTools
 
 ## CsExec
-PsExec functionality in C#.
+PsExec functionality in C#.  Must be running in the context of a privileged user.
 
 ### Usage
 ```
