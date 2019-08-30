@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Management;
 
-namespace WMI
+namespace CsWMI
 {
     class Program
     {
