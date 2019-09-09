@@ -32,6 +32,14 @@ Current Methods: `MMC20.Application`, `ShellWindows`, `ShellBrowserWindow`, `Exc
 CsDCOM.exe <targetMachine> <binary> <arg> <method>
 ```
 
+## CsEnv
+Add user/machine/process environment variables.
+
+### Usage:
+```
+CsEnv.exe <variableName> <value> <target>
+```
+
 ## Credits
 Most code blatently stolen and adapted from:
 - [Invoke-PsExec](https://github.com/EmpireProject/Empire/blob/master/data/module_source/lateral_movement/Invoke-PsExec.ps1) by [harmj0y](https://twitter.com/harmj0y)

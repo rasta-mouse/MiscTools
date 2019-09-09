@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsWMI", "CsWMI\CsWMI.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsDCOM", "CsDCOM\CsDCOM.csproj", "{49A6719E-11A8-46E6-AD7A-1DB1BE9FEA37}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsEnv", "CsEnv\CsEnv.csproj", "{384E9647-28A9-4835-8FA7-2472B1ACEDC0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{49A6719E-11A8-46E6-AD7A-1DB1BE9FEA37}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49A6719E-11A8-46E6-AD7A-1DB1BE9FEA37}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49A6719E-11A8-46E6-AD7A-1DB1BE9FEA37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{384E9647-28A9-4835-8FA7-2472B1ACEDC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{384E9647-28A9-4835-8FA7-2472B1ACEDC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{384E9647-28A9-4835-8FA7-2472B1ACEDC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{384E9647-28A9-4835-8FA7-2472B1ACEDC0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
