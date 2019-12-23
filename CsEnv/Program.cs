@@ -10,7 +10,7 @@ namespace CsEnv
             {
                 Console.WriteLine(" [x] Invalid number of arguments");
                 Console.WriteLine("     Usage: CsEnv.exe <variable> <value> <target>");
-                Environment.Exit(1);
+                return;
             }
 
             string variable = args[0];

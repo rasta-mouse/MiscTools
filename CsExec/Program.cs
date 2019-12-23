@@ -14,7 +14,7 @@ namespace CsExec
             {
                 Console.WriteLine(" [x] Invalid number of arguments");
                 Console.WriteLine("     Usage: CsExec.exe <targetMachine> <serviceName> <serviceDisplayName> <binPath>");
-                Environment.Exit(1);
+                return;
             }
 
             string target = $@"\\{args[0]}";

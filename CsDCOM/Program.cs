@@ -11,7 +11,7 @@ namespace CsDCOM
             {
                 Console.WriteLine(" [x] Invalid number of arguments");
                 Console.WriteLine("     Usage: DCOM.exe <targetMachine> <binary> <arg> <method>");
-                Environment.Exit(1);
+                return;
             }
 
             string target = args[0];
