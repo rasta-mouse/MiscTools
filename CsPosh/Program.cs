@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
-
+using System.Security;
 using NDesk.Options;
 
 namespace CsPosh
@@ -21,11 +21,17 @@ namespace CsPosh
             var outstring = false;
             var target = string.Empty;
             var code = string.Empty;
+            var domain = string.Empty;
+            var username = string.Empty;
+            var password = string.Empty;
 
             var options = new OptionSet(){
-                {"t|target=","Target machine", o => target = o},
-                {"c|code=","Code to execute", o => code = o},
+                {"t|target=", "Target machine", o => target = o},
+                {"c|code=", "Code to execute", o => code = o},
                 {"o|outstring", "Append Out-String to code", o => outstring = true },
+                {"d|domain=", "Domain for alternate credentials", o => domain = o },
+                {"u|username=", "Username for alternate credentials", o => username = o },
+                {"p|password=", "Password for alternate credentials", o => password = o },
                 {"h|?|help","Show Help", o => help = true},
             };
 
@@ -56,6 +62,17 @@ namespace CsPosh
             {
                 var uri = new Uri($"http://{target}:5985/WSMAN");
                 var conn = new WSManConnectionInfo(uri);
+
+                if (!string.IsNullOrEmpty(domain) && !string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
+                {
+                    var pass = new SecureString();
+                    foreach (char c in password.ToCharArray())
+                        pass.AppendChar(c);
+
+                    var cred = new PSCredential($"{domain}\\{username}", pass);
+
+                    conn.Credential = cred;
+                }
 
                 using (var runspace = RunspaceFactory.CreateRunspace(conn))
                 {
