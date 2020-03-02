@@ -1,34 +1,86 @@
 ﻿using System;
 using System.Reflection;
 
+using NDesk.Options;
+
 namespace CsDCOM
 {
     class Program
     {
+        enum Method
+        {
+            MMC20Application,
+            ShellWindows,
+            ShellBrowserWindow,
+            ExcelDDE
+        }
+
+        public static void ShowHelp(OptionSet p)
+        {
+            Console.WriteLine("Usage:");
+            p.WriteOptionDescriptions(Console.Out);
+        }
+
         static void Main(string[] args)
         {
-            if (args.Length < 4)
+            var help = false;
+            var target = string.Empty;
+            var binary = string.Empty;
+            var arg = string.Empty;
+            var method = string.Empty;
+
+            OptionSet options = new OptionSet(){
+                {"t|target=","Target Machine", o => target = o},
+                {"b|binary=","Binary: powershell.exe", o => binary = o},
+                {"a|args=","Arguments: -enc <blah>", o => arg = o},
+                {"m|method=","Method: MMC20Application, ShellWindows, ShellBrowserWindow, ExcelDDE", o => method = o},
+                {"h|?|help","Show Help", o => help = true},
+            };
+
+            try
             {
-                Console.WriteLine(" [x] Invalid number of arguments");
-                Console.WriteLine("     Usage: DCOM.exe <targetMachine> <binary> <arg> <method>");
+                options.Parse(args);
+
+                if (help)
+                {
+                    ShowHelp(options);
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(target) || string.IsNullOrEmpty(binary) || string.IsNullOrEmpty(arg) || string.IsNullOrEmpty(method))
+                {
+                    ShowHelp(options);
+                    return;
+                }
+
+                if (!Enum.IsDefined(typeof(Method), method))
+                {
+                    ShowHelp(options);
+                    return;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.Error.WriteLine(e.Message);
+                ShowHelp(options);
                 return;
             }
 
-            string target = args[0];
-            string binary = args[1];
-            string arg = args[2];
-            string method = args[3];
-
-            if (method.ToLower() == "mmc20.application")
-                MMC20Application(target, binary, arg);
-            else if (method.ToLower() == "shellwindows")
-                ShellWindows(target, binary, arg);
-            else if (method.ToLower() == "shellbrowserwindow")
-                ShellBrowserWindow(target, binary, arg);
-            else if (method.ToLower() == "exceldde")
-                ExcelDDE(target, binary, arg);
-            else
-                Console.WriteLine(" [x] Invalid Method");
+            switch (method.ToLower())
+            {
+                case "mmc20application":
+                    MMC20Application(target, binary, arg);
+                    break;
+                case "shellwindows":
+                    ShellWindows(target, binary, arg);
+                    break;
+                case "shellbrowserwindow":
+                    ShellBrowserWindow(target, binary, arg);
+                    break;
+                case "exceldde":
+                    ExcelDDE(target, binary, arg);
+                    break;
+            }
         }
 
         private static void MMC20Application(string target, string binary, string arg)
