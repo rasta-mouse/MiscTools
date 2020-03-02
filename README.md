@@ -16,7 +16,7 @@ Must be running in the context of a privileged user.
 ```
 Usage:
   -t, --target=VALUE         Target Machine
-  -c, --code=VALUE           Code: Get-Process
+  -c, --code=VALUE           Code to execute
   -o, --outstring            Append Out-String to code
   -h, -?, --help             Show Help
 ```

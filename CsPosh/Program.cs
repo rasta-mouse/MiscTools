@@ -23,8 +23,8 @@ namespace CsPosh
             var code = string.Empty;
 
             var options = new OptionSet(){
-                {"t|target=","Target Machine", o => target = o},
-                {"c|code=","Code: Get-Process", o => code = o},
+                {"t|target=","Target machine", o => target = o},
+                {"c|code=","Code to execute", o => code = o},
                 {"o|outstring", "Append Out-String to code", o => outstring = true },
                 {"h|?|help","Show Help", o => help = true},
             };
