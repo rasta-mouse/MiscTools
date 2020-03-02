@@ -15,9 +15,12 @@ Must be running in the context of a privileged user.
 
 ```
 Usage:
-  -t, --target=VALUE         Target Machine
+  -t, --target=VALUE         Target machine
   -c, --code=VALUE           Code to execute
   -o, --outstring            Append Out-String to code
+  -d, --domain=VALUE         Domain for alternate credentials
+  -u, --username=VALUE       Username for alternate credentials
+  -p, --password=VALUE       Password for alternate credentials
   -h, -?, --help             Show Help
 ```
 
