@@ -29,7 +29,7 @@ namespace CsWMI
             catch (Exception e)
             {
                 Console.WriteLine(" [x] {0}", e.Message);
-                Environment.Exit(1);
+                return;
             }
 
             if (method.ToLower() == "processcallcreate")

@@ -30,7 +30,7 @@ namespace CsExec
                 if (hSCManager == IntPtr.Zero)
                 {
                     Console.WriteLine($" [x] Could not open Service Manager on {target}");
-                    Environment.Exit(1);
+                    return;
                 }
 
                 // Create Service
@@ -39,7 +39,7 @@ namespace CsExec
                 if (hService == IntPtr.Zero)
                 {
                     Console.WriteLine($" [x] Could not create service {serviceName}");
-                    Environment.Exit(1);
+                    return;
                 }
 
                 // Start Service
