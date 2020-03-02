@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Linq;
+using System.Security;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
-using System.Security;
+
 using NDesk.Options;
 
 namespace CsPosh
