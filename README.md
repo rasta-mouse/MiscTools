@@ -3,19 +3,29 @@
 ## CsExec
 Command Exec / Lateral movement via PsExec-like functionality.  Must be running in the context of a privileged user.
 
-### Usage
 ```
 CsExec.exe <targetMachine> <serviceName> <serviceDisplayName> <binPath>
 ```
 
 Also see [TikiService](https://rastamouse.me/2019/08/tikiservice/).
 
+## CsPosh
+Command Exec / Lateral Movement via PowerShell. Creates a PowerShell runspace on a remote target.
+Must be running in the context of a privileged user.
+
+```
+Usage:
+  -t, --target=VALUE         Target Machine
+  -c, --code=VALUE           Code: Get-Process
+  -o, --outstring            Append Out-String to code
+  -h, -?, --help             Show Help
+```
+
 ## CsWMI
 Command Exec / Lateral Movement via WMI. Must be running in the context of a privileged user.
 
 Current methods: `ProcessCallCreate`.
 
-### Usage
 ```
 CsWMI.exe <targetMachine> <command> <method>
 ```
@@ -27,15 +37,19 @@ Command Exec / Lateral Movement via DCOM. Must be running in the context of a pr
 
 Current Methods: `MMC20.Application`, `ShellWindows`, `ShellBrowserWindow`, `ExcelDDE`.
 
-### Usage
 ```
-CsDCOM.exe <targetMachine> <binary> <arg> <method>
+Usage:
+  -t, --target=VALUE         Target Machine
+  -b, --binary=VALUE         Binary: powershell.exe
+  -a, --args=VALUE           Arguments: -enc <blah>
+  -m, --method=VALUE         Method: MMC20Application, ShellWindows,
+                               ShellBrowserWindow, ExcelDDE
+  -h, -?, --help             Show Help
 ```
 
 ## CsEnv
 Add user/machine/process environment variables.
 
-### Usage:
 ```
 CsEnv.exe <variableName> <value> <target>
 ```

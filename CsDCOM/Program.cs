@@ -29,7 +29,7 @@ namespace CsDCOM
             var arg = string.Empty;
             var method = string.Empty;
 
-            OptionSet options = new OptionSet(){
+            var options = new OptionSet(){
                 {"t|target=","Target Machine", o => target = o},
                 {"b|binary=","Binary: powershell.exe", o => binary = o},
                 {"a|args=","Arguments: -enc <blah>", o => arg = o},
