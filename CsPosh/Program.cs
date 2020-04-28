@@ -22,6 +22,7 @@ namespace CsPosh
             var outstring = false;
             var target = string.Empty;
             var code = string.Empty;
+            var encoded = string.Empty;
             var domain = string.Empty;
             var username = string.Empty;
             var password = string.Empty;
@@ -29,6 +30,7 @@ namespace CsPosh
             var options = new OptionSet(){
                 {"t|target=", "Target machine", o => target = o},
                 {"c|code=", "Code to execute", o => code = o},
+                {"e|encoded=", "Encoded Code to execute", o => encoded = o},
                 {"o|outstring", "Append Out-String to code", o => outstring = true },
                 {"d|domain=", "Domain for alternate credentials", o => domain = o },
                 {"u|username=", "Username for alternate credentials", o => username = o },
@@ -44,6 +46,12 @@ namespace CsPosh
                 {
                     ShowHelp(options);
                     return;
+                }
+                
+                if (!string.IsNullOrEmpty(encoded))
+                {
+                    code = System.Text.ASCIIEncoding.ASCII.GetString(System.Convert.FromBase64String(encoded));
+                    Console.WriteLine("Encoded command to execute: " + code);
                 }
 
                 if (string.IsNullOrEmpty(target) || string.IsNullOrEmpty(code))
