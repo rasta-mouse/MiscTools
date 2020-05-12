@@ -17,7 +17,9 @@ Must be running in the context of a privileged user.
 Usage:
   -t, --target=VALUE         Target machine
   -c, --code=VALUE           Code to execute
+  -e, --encoded              Indicates that provided code is base64 encoded
   -o, --outstring            Append Out-String to code
+  -r, --redirect             Redirect stderr to stdout
   -d, --domain=VALUE         Domain for alternate credentials
   -u, --username=VALUE       Username for alternate credentials
   -p, --password=VALUE       Password for alternate credentials
