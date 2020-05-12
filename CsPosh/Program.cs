@@ -5,6 +5,7 @@ using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 
 using NDesk.Options;
+using System.Text;
 
 namespace CsPosh
 {
@@ -22,6 +23,7 @@ namespace CsPosh
             var outstring = false;
             var target = string.Empty;
             var code = string.Empty;
+            var encoded = false;
             var domain = string.Empty;
             var username = string.Empty;
             var password = string.Empty;
@@ -29,10 +31,11 @@ namespace CsPosh
             var options = new OptionSet(){
                 {"t|target=", "Target machine", o => target = o},
                 {"c|code=", "Code to execute", o => code = o},
-                {"o|outstring", "Append Out-String to code", o => outstring = true },
-                {"d|domain=", "Domain for alternate credentials", o => domain = o },
-                {"u|username=", "Username for alternate credentials", o => username = o },
-                {"p|password=", "Password for alternate credentials", o => password = o },
+                {"e|encoded", "Indicates that provided code is base64 encoded", o => encoded = true},
+                {"o|outstring", "Append Out-String to code", o => outstring = true},
+                {"d|domain=", "Domain for alternate credentials", o => domain = o},
+                {"u|username=", "Username for alternate credentials", o => username = o},
+                {"p|password=", "Password for alternate credentials", o => password = o},
                 {"h|?|help","Show Help", o => help = true},
             };
 
@@ -45,7 +48,7 @@ namespace CsPosh
                     ShowHelp(options);
                     return;
                 }
-
+                
                 if (string.IsNullOrEmpty(target) || string.IsNullOrEmpty(code))
                 {
                     ShowHelp(options);
@@ -71,7 +74,6 @@ namespace CsPosh
                         pass.AppendChar(c);
 
                     var cred = new PSCredential($"{domain}\\{username}", pass);
-
                     conn.Credential = cred;
                 }
 
@@ -82,6 +84,7 @@ namespace CsPosh
                     using (var posh = PowerShell.Create())
                     {
                         posh.Runspace = runspace;
+                        if (encoded) { code = Encoding.Default.GetString(Convert.FromBase64String(code)).Replace("\0", ""); }
                         posh.AddScript(code);
                         if (outstring) { posh.AddCommand("Out-String"); }
                         var results = posh.Invoke();
