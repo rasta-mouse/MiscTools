@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Text;
 using System.Linq;
 using System.Security;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 
 using NDesk.Options;
-using System.Text;
 
 namespace CsPosh
 {
@@ -24,6 +24,7 @@ namespace CsPosh
             var target = string.Empty;
             var code = string.Empty;
             var encoded = false;
+            var redirect = false;
             var domain = string.Empty;
             var username = string.Empty;
             var password = string.Empty;
@@ -33,6 +34,7 @@ namespace CsPosh
                 {"c|code=", "Code to execute", o => code = o},
                 {"e|encoded", "Indicates that provided code is base64 encoded", o => encoded = true},
                 {"o|outstring", "Append Out-String to code", o => outstring = true},
+                {"r|redirect", "Redirect stderr to stdout", o => redirect = true},
                 {"d|domain=", "Domain for alternate credentials", o => domain = o},
                 {"u|username=", "Username for alternate credentials", o => username = o},
                 {"p|password=", "Password for alternate credentials", o => password = o},
@@ -67,7 +69,7 @@ namespace CsPosh
                 var uri = new Uri($"http://{target}:5985/WSMAN");
                 var conn = new WSManConnectionInfo(uri);
 
-                if (!string.IsNullOrEmpty(domain) && !string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
+                if ((domain ?? username ?? password) == null || (domain ?? username ?? password) == string.Empty)
                 {
                     var pass = new SecureString();
                     foreach (char c in password.ToCharArray())
@@ -85,7 +87,8 @@ namespace CsPosh
                     {
                         posh.Runspace = runspace;
                         if (encoded) { code = Encoding.Default.GetString(Convert.FromBase64String(code)).Replace("\0", ""); }
-                        posh.AddScript(code);
+                        if (redirect) { posh.AddScript("& { " + code + " } *>&1"); }
+                        else { posh.AddScript(code); }
                         if (outstring) { posh.AddCommand("Out-String"); }
                         var results = posh.Invoke();
                         var output = string.Join(Environment.NewLine, results.Select(R => R.ToString()).ToArray());
