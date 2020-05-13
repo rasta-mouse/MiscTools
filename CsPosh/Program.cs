@@ -69,7 +69,7 @@ namespace CsPosh
                 var uri = new Uri($"http://{target}:5985/WSMAN");
                 var conn = new WSManConnectionInfo(uri);
 
-                if ((domain ?? username ?? password) == null || (domain ?? username ?? password) == string.Empty)
+                if ((domain ?? username ?? password) != null || (domain ?? username ?? password) != string.Empty)
                 {
                     var pass = new SecureString();
                     foreach (char c in password.ToCharArray())
