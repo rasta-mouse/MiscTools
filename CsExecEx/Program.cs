@@ -343,7 +343,7 @@ namespace CsExec
                 Console.WriteLine(SUCCESS_OPEN_SERVICE);
 
                 if (action == "sequence") 
-                {
+                {  
                     if (!sex.Create()) {
                         Console.WriteLine(FAILED_CREATE_SERVICE);
                         sex.CloseHandles();
@@ -378,8 +378,6 @@ namespace CsExec
                     if (!sex.Create())
                     {
                         Console.WriteLine(FAILED_CREATE_SERVICE);
-                        sex.CloseHandles();
-                        return;
                     }
                     Console.WriteLine(SUCCESS_CREATE_SERVICE);
                 } else if (action == "start")
@@ -387,8 +385,6 @@ namespace CsExec
                     if (!sex.Start())
                     {
                         Console.WriteLine(FAILED_START_SERVICE);
-                        sex.CloseHandles();
-                        return;
                     }
                     Console.WriteLine(SUCCESS_START_SERVICE);
 
@@ -397,8 +393,6 @@ namespace CsExec
                     if (!sex.Stop())
                     {
                         Console.WriteLine(FAILED_STOP_SERVICE);
-                        sex.CloseHandles();
-                        return;
                     }
                     Console.WriteLine(SUCCESS_STOP_SERVICE);
                 } else if (action == "delete")
@@ -406,8 +400,6 @@ namespace CsExec
                     if (!sex.Delete())
                     {
                         Console.WriteLine(FAILED_DELETE_SERVICE);
-                        sex.CloseHandles();
-                        return;
                     }
                     Console.WriteLine(SUCCESS_DELETE_SERVICE);
                 } else {
