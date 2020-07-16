@@ -40,15 +40,20 @@ Also see [The Return of Aggressor](https://rastamouse.me/2019/06/the-return-of-a
 ## CsDCOM
 Command Exec / Lateral Movement via DCOM. Must be running in the context of a privileged user.
 
-Current Methods: `MMC20.Application`, `ShellWindows`, `ShellBrowserWindow`, `ExcelDDE`.
+Extended Version: More methods were implemented
+
+Current Methods: `MMC20.Application`, `ShellWindows`, `ShellBrowserWindow`, `ExcelDDE`, `VisioAddonEx`,
+                  `OutlookShellEx`, `ExcelXLL`, `VisioExecLine`, `OfficeMacro`.
 
 ```
 Usage:
   -t, --target=VALUE         Target Machine
   -b, --binary=VALUE         Binary: powershell.exe
   -a, --args=VALUE           Arguments: -enc <blah>
-  -m, --method=VALUE         Method: MMC20Application, ShellWindows,
-                               ShellBrowserWindow, ExcelDDE
+  -m, --method=VALUE         Methods: MMC20Application, ShellWindows,
+                               ShellBrowserWindow, ExcelDDE, VisioAddonEx,
+                               OutlookShellEx, ExcelXLL, VisioExecLine, 
+							   OfficeMacro
   -h, -?, --help             Show Help
 ```
 
