@@ -28,6 +28,7 @@ namespace CsDCOM
             var binary = string.Empty;
             var arg = string.Empty;
             var method = string.Empty;
+            Method dcomMethod;
 
             var options = new OptionSet(){
                 {"t|target=","Target Machine", o => target = o},
@@ -53,7 +54,7 @@ namespace CsDCOM
                     return;
                 }
 
-                if (!Enum.IsDefined(typeof(Method), method))
+                if (!Enum.TryParse(method, true, out dcomMethod))
                 {
                     ShowHelp(options);
                     return;
@@ -66,18 +67,18 @@ namespace CsDCOM
                 return;
             }
 
-            switch (method.ToLower())
+            switch (dcomMethod)
             {
-                case "mmc20application":
+                case Method.MMC20Application:
                     MMC20Application(target, binary, arg);
                     break;
-                case "shellwindows":
+                case Method.ShellWindows:
                     ShellWindows(target, binary, arg);
                     break;
-                case "shellbrowserwindow":
+                case Method.ShellBrowserWindow:
                     ShellBrowserWindow(target, binary, arg);
                     break;
-                case "exceldde":
+                case Method.ExcelDDE:
                     ExcelDDE(target, binary, arg);
                     break;
             }
